@@ -6,7 +6,7 @@ DOCKER_IMAGE="june-ten/react-app"
 DOCKER_TAG="latest"
 PORT="80"
 CONTAINER_NAME="${APP_NAME}-container"
-HOST_IP="http://106.14.124.190/"
+HOST_IP="http://106.14.124.190"
 
 echo "🚀 开始部署 ${APP_NAME}..."
 
