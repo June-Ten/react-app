@@ -1,33 +1,29 @@
-# 多阶段构建Dockerfile - 包含Node.js构建步骤
-# 第一阶段：构建阶段
-FROM node:22.20.0 AS builder
+## Production Dockerfile (expects local build artifacts)
+##
+## This Dockerfile no longer builds the app inside the image. Instead,
+## it expects you to run the Node build locally (or in CI) so that a
+## `dist/` directory exists in the project root. This avoids pulling
+## the Node image during `docker build`.
+##
+## Usage:
+##   # build locally (on your Windows/Linux host)
+##   npm ci
+##   npm run build
+##   # then build the image
+##   docker build -t my-react-app:latest .
+##
+## Note: Docker still needs to pull the `nginx` base image unless you
+## already have it locally. Use `docker pull nginx:stable-perl` beforehand
+## or provide a local image and run `docker build --pull=false`.
 
-# 设置工作目录
-WORKDIR /app
-
-# 复制package.json和package-lock.json
-COPY package*.json ./
-
-# 安装依赖（包括开发依赖，因为构建需要）
-RUN npm ci
-
-# 复制源代码
-COPY . .
-
-# 构建应用
-RUN npm run build
-
-# 第二阶段：生产阶段
 FROM nginx:stable-perl
 
-# 从构建阶段复制构建好的dist文件到Nginx目录
-COPY --from=builder /app/dist/ /usr/share/nginx/html/
+# Copy the static build output (must be created before docker build)
+COPY dist/ /usr/share/nginx/html/
 
-# 复制Nginx配置文件
+# Copy nginx config if present (optional)
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# 暴露端口
 EXPOSE 80
 
-# 启动Nginx
 CMD ["nginx", "-g", "daemon off;"]
