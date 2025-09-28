@@ -10,10 +10,6 @@ CONTAINER_NAME="${APP_NAME}-container"
 echo "🚀 开始部署 ${APP_NAME}..."
 
 # 检查必要文件
-if [ ! -d "dist" ]; then
-    echo "❌ 错误: dist 目录不存在，请先构建项目"
-    exit 1
-fi
 
 if [ ! -f "nginx.conf" ]; then
     echo "❌ 错误: nginx.conf 文件不存在"
