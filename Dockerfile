@@ -1,6 +1,6 @@
 # 多阶段构建Dockerfile - 包含Node.js构建步骤
 # 第一阶段：构建阶段
-FROM node:20 AS builder
+FROM node:22 AS builder
 
 # 设置工作目录
 WORKDIR /app
